@@ -2,11 +2,12 @@ package org.vorobiev.testRest;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "restuser")
-public class User {
+public class User implements Serializable {
 
 
     @Id

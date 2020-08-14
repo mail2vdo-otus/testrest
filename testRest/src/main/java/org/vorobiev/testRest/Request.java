@@ -1,10 +1,11 @@
 package org.vorobiev.testRest;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "request")
-public class Request {
+public class Request implements Serializable  {
 
 
     @Id

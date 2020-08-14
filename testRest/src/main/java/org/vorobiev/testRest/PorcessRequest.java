@@ -6,16 +6,17 @@ package org.vorobiev.testRest;
 //import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.*;
 //import org.springframework.data.querydsl.*;
 //import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
@@ -46,18 +47,48 @@ public class PorcessRequest {
     }
 
     @GetMapping("/version")
-    public ResponseEntity<String> getVersion(){
-        return new ResponseEntity<String>("{\"version\": \"1.098\"}", HttpStatus.OK);
+    public ResponseEntity<String> getVersion() throws InterruptedException {
+        return new ResponseEntity<String>("{\"version\": \""+getVersionCode(1)+"''\"}", HttpStatus.OK);
     }
 
+    @Cacheable("version")
+    @GetMapping("/version/{key}")
+    public String getVersionCode(@PathVariable("key") int key) throws InterruptedException {
+        sleep(1000, 0);
+        return "1.099";
+    }
+  /*  @GetMapping("/request/{id}")
+    public Request dddfindRequestById(@PathVariable Map<String, String> pathVarsMap) throws InterruptedException  {
 
-    @GetMapping("/request/{id}")
-    public Request findRequestById(@PathVariable("id") Request request) {
+        int requestId = Integer.parseInt(pathVarsMap.get("id"));
+
+            sleep(5000, 0);
+
+
+
+
+        return repoRequest.getOne(requestId );
+    }
+*/
+  @Cacheable("request")
+  @GetMapping("/request/{id}")
+  public Request findRequestById(@PathVariable("id") Request request) throws InterruptedException {
+
+      return request;
+  }
+    @Cacheable("request")
+    @GetMapping("/request_s/{id}")
+    public Request findRequestById_s(@PathVariable("id") Request request) throws InterruptedException {
+        sleep(1000, 0);
         return request;
     }
 
+
+
+    @Cacheable("user")
     @GetMapping("/user/{id}")
     public User  findUserById(@PathVariable("id") User user) {
+
         return user;
     }
 
@@ -65,7 +96,7 @@ public class PorcessRequest {
     public Page<Request> findAllUsers(Pageable pageable) {
         return repoRequest.findAll(pageable);
     }*/
-
+   @Cacheable("requests")
     @GetMapping(value = "/requests", params = { "sleepMs"})
     public Page<Request> findAllRequests(@RequestParam("sleepMs") String sleepMs,Pageable pageable) throws InterruptedException {
         int _sleep = 0;
@@ -79,6 +110,7 @@ public class PorcessRequest {
         return repoRequest.findAll(pageable);
     }
 
+    @Cacheable("requests")
     @GetMapping("/requests")
     public Page<Request> findAllRequests(Pageable pageable) throws InterruptedException {
 
@@ -86,7 +118,7 @@ public class PorcessRequest {
         return repoRequest.findAll(pageable);
     }
 
-
+    @Cacheable("users")
     @GetMapping("/users")
     public Page<User> findAllUsers(Pageable pageable) {
         return repoUser.findAll(pageable);
@@ -131,6 +163,26 @@ public class PorcessRequest {
 
     }
 
+    @Cacheable("users")
+    @RequestMapping(path = "/filteredUser",
+            method = RequestMethod.GET,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
+    public List<User> filteredUser(@RequestBody  User user) throws InterruptedException {
+        sleep(1000, 0);
+        ExampleMatcher customExampleMatcher = ExampleMatcher.matching()
+                .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("surName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withIgnorePaths("id", "birthDate");;
+        Example<User> example = Example.of(user, customExampleMatcher);
+        return repoUser.findAll(example);
+
+
+
+    }
+
+
     @DeleteMapping("/user/{id}")
     public ResponseEntity delUser(@PathVariable("id") int id){
 
@@ -152,8 +204,8 @@ public class PorcessRequest {
         return repoRequest.findAll(pageable);
     }
 */
-
-   /* @GetMapping("/filteredusers")
+/*
+   @GetMapping("/filteredusers")
     public Iterable<Request> getUsersByQuerydslPredicate(@QuerydslPredicate(root = Request.class) Predicate predicate)
     {
         return repoRequest.findAll(predicate);
@@ -176,6 +228,25 @@ public class PorcessRequest {
         repoRequest.deleteById(id);
 
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<String> getProfile(@RequestHeader Map<String, String> headers)
+    {
+       String json ="";
+        for (String key : headers.keySet()) {
+           json  += (key.toLowerCase().startsWith("x-profile-")?(json.equals("")?"":",")+"\""+key.substring(10)+"\":\""+headers.get(key)+"\"":"");
+
+        }
+
+        json = "{"+json+"}";
+        return new ResponseEntity<String>(json, HttpStatus.OK);
+
+
+    }
+
+
+
+
 
 
 }
