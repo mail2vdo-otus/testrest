@@ -1,7 +1,11 @@
 /home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/User.java
+/home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/Deal.java
+/home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/RepoDeal.java
 /home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/RepoUser.java
+/home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/RepoClient.java
 /home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/PorcessRequest.java
 /home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/Request.java
 /home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/RepoRequest.java
 /home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/SpringFoxConfig.java
 /home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/Application.java
+/home/mail2vdo/IdeaProjects/testRest/src/main/java/org/vorobiev/testRest/Client.java

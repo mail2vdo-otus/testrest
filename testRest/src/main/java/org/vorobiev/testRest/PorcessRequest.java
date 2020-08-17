@@ -26,6 +26,8 @@ public class PorcessRequest {
 
     private final RepoRequest repoRequest;
     private final RepoUser repoUser;
+    private final RepoClient repoClient;
+    private final RepoDeal repoDeal;
 
     //@Value("#{systemProperties['appStatusMessage'] ?: 'no-message'}")
     @Value("${appStatusMessage:'no-message_passwd'}")
@@ -34,9 +36,11 @@ public class PorcessRequest {
 
 
     @Autowired
-    public PorcessRequest(RepoRequest repoRequest, RepoUser repoUser) {
+    public PorcessRequest(RepoRequest repoRequest, RepoUser repoUser, RepoDeal repoDeal, RepoClient repoClient) {
         this.repoRequest = repoRequest;
         this.repoUser = repoUser;
+        this.repoClient = repoClient;
+        this.repoDeal = repoDeal;
     }
 
 
@@ -247,7 +251,114 @@ public class PorcessRequest {
 
 
 
+    @Cacheable("clients")
+    @GetMapping("/clients")
+    public Page<Client> findAllClients(Pageable pageable) {
+        return repoClient.findAll(pageable);
+    }
 
+
+    @RequestMapping(path = "/client",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
+    public ResponseEntity<String> postClent(@RequestBody  Client client) {
+
+        try {
+            client.setClientid(0);
+            client = repoClient.save(client);
+            return new ResponseEntity<String>("{\"id\": \"" + client.getClientid() + "\"}", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("{\"fault\": \"" + e.getMessage() + "\"}", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+
+
+
+    @GetMapping("/deals")
+    public Page<Deal> findAllDeals(Pageable pageable) {
+        return repoDeal.findAll(pageable);
+    }
+
+
+    @RequestMapping(path = "/deal/{clientid}",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
+    public ResponseEntity<String> postDeal(@PathVariable int clientid,  @RequestBody  Deal deal) {
+
+        try {
+
+            deal.setClient(repoClient.findById(clientid).get());
+            deal.setDealid(0);
+            repoDeal.save(deal);
+            return  new ResponseEntity<String>("{\"id\": \"" + deal.getDealid() + "\"}", HttpStatus.OK);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("{\"fault\": \"" + e.getMessage() + "\"}", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+
+
+
+
+    @RequestMapping(path = "/request/{dealid}",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
+    public ResponseEntity<String> postRequest(@PathVariable int dealid , @RequestBody  Request request) {
+
+        try {
+
+            request.setDeal(repoDeal.findById(dealid).get());
+            request.setId(0);
+            repoRequest.save(request);
+            return  new ResponseEntity<String>("{\"id\": \"" + request.getId() + "\"}", HttpStatus.OK);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("{\"fault\": \"" + e.getMessage() + "\"}", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+
+
+    @RequestMapping(path = "/request",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
+    public ResponseEntity<String> postRequest(@RequestBody  Request request) {
+
+        try {
+
+
+            request.setId(0);
+            repoRequest.save(request);
+            return  new ResponseEntity<String>("{\"id\": \"" + request.getId() + "\"}", HttpStatus.OK);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("{\"fault\": \"" + e.getMessage() + "\"}", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
 
 }
 
