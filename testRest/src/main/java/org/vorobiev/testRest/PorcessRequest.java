@@ -5,6 +5,7 @@ package org.vorobiev.testRest;
 
 //import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +25,10 @@ import static java.lang.Thread.sleep;
 
 @RestController
 public class PorcessRequest {
+
+    @Autowired
+    @Qualifier("JmsTemplateQueue")
+    private JmsTemplate jmsQueueTemplate;
 
     private final RepoRequest repoRequest;
     private final RepoUser repoUser;
@@ -349,6 +355,9 @@ public class PorcessRequest {
 
             request.setId(0);
             repoRequest.save(request);
+
+            jmsQueueTemplate.convertAndSend("model_out",request);
+
             return  new ResponseEntity<String>("{\"id\": \"" + request.getId() + "\"}", HttpStatus.OK);
 
 

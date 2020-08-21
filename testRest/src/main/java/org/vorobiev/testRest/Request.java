@@ -22,6 +22,27 @@ public class Request implements Serializable  {
     @Column(name="duedate")
     private Date dueDate;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Request(int id, String message, String code, Date openDate, Date dueDate, String status, Deal deal) {
+        this.id = id;
+        this.message = message;
+        this.code = code;
+        this.openDate = openDate;
+        this.dueDate = dueDate;
+        this.status = status;
+        this.deal = deal;
+    }
+
+    @Column(name="status")
+    private String status;
+
     public void setId(int id) {
         this.id = id;
     }

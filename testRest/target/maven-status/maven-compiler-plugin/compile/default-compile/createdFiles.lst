@@ -1,7 +1,9 @@
 org/vorobiev/testRest/RepoRequest.class
+org/vorobiev/testRest/Listener.class
 org/vorobiev/testRest/RepoClient.class
 org/vorobiev/testRest/PorcessRequest.class
 org/vorobiev/testRest/Application.class
+org/vorobiev/testRest/JmsConfig.class
 org/vorobiev/testRest/Request.class
 org/vorobiev/testRest/User.class
 org/vorobiev/testRest/RepoUser.class
