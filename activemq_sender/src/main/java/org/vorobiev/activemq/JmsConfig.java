@@ -1,6 +1,7 @@
 package org.vorobiev.activemq;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -14,7 +15,9 @@ import org.springframework.jms.support.converter.MessageType;
 @EnableJms
 public class JmsConfig {
 
-    String BROKER_URL = "tcp://localhost:61616";
+    @Value("${BROKER_URL}")
+    String BROKER_URL;
+
     String BROKER_USERNAME = "";
     String BROKER_PASSWORD = "";
 

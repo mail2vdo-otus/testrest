@@ -1,6 +1,8 @@
 package org.vorobiev.activemq;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
@@ -29,9 +31,9 @@ public class UpdateState implements Action<String, String> {
         request.setStatus(context.getTarget().getId());
 
         if (!actionQueue.equals("")) {
-            jmsQueueTemplate.convertAndSend(actionQueue, request);
+            jmsQueueTemplate.convertAndSend(actionQueue, (new ObjectMapper()).convertValue(request, JsonNode.class));
         }
 
-        jmsQueueTemplate.convertAndSend(modelQueue,request);
+        jmsQueueTemplate.convertAndSend(modelQueue,(new ObjectMapper()).convertValue(request, JsonNode.class));
     }
 }

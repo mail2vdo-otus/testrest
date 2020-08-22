@@ -36,3 +36,9 @@ activemq:
       qos-enabled: true
       receive-timeout: 1000
       time-to-live: 36000
+
+
+
+
+
+

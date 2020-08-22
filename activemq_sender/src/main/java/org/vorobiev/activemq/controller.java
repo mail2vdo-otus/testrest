@@ -1,6 +1,8 @@
 package org.vorobiev.activemq;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -31,7 +33,8 @@ public class controller {
     public void sendMessage(String queueName, Request request) {
 
 
-        jmsQueueTemplate.convertAndSend(queueName,request);
+        jmsQueueTemplate.convertAndSend(queueName,(new ObjectMapper()).convertValue(request, JsonNode.class));
+
 
     }
 

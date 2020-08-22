@@ -4,6 +4,8 @@ package org.vorobiev.testRest;
 
 
 //import com.querydsl.core.types.Predicate;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -354,9 +356,10 @@ public class PorcessRequest {
 
 
             request.setId(0);
+
             repoRequest.save(request);
 
-            jmsQueueTemplate.convertAndSend("model_out",request);
+            jmsQueueTemplate.convertAndSend("model_out",(new ObjectMapper()).convertValue(request, JsonNode.class));
 
             return  new ResponseEntity<String>("{\"id\": \"" + request.getId() + "\"}", HttpStatus.OK);
 

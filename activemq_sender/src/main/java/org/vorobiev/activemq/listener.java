@@ -1,5 +1,6 @@
 package org.vorobiev.activemq;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.annotation.JmsListener;
@@ -18,19 +19,27 @@ public class listener {
     ContractSM contractSM;
 
     @JmsListener(destination = "model_out")
-    public void  receiveMessageModel(Request request) throws JMSException,Exception {
-
+    public void  receiveMessageModel(JsonNode jsonNode ) throws JMSException, Exception {
+        Request request = new Request();
+        request.setId(jsonNode.path("id").asInt());
+        request.setStatus(jsonNode.path("status").asText());
         System.out.println("#################################### receive model: "+request.getStatus());
         contractSM.executeSM(request,"model");
     }
     @JmsListener(destination = "back_out")
-    public void  receiveMessageBack(Request request) throws JMSException,Exception {
+    public void  receiveMessageBack(JsonNode jsonNode ) throws JMSException,Exception {
+        Request request = new Request();
+        request.setId(jsonNode.path("id").asInt());
+        request.setStatus(jsonNode.path("status").asText());
 
         System.out.println("#################################### receive back: "+request.getStatus());
         contractSM.executeSM(request,"back");
     }
     @JmsListener(destination = "notify_out")
-    public void  receiveMessageNotify(Request request) throws JMSException,Exception {
+    public void  receiveMessageNotify(JsonNode jsonNode ) throws JMSException,Exception {
+        Request request = new Request();
+        request.setId(jsonNode.path("id").asInt());
+        request.setStatus(jsonNode.path("status").asText());
 
         System.out.println("#################################### receive notify: "+request.getStatus());
         contractSM.executeSM(request,"notify");

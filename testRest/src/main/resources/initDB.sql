@@ -3,7 +3,7 @@
      create table if not exists deal(dealid serial primary key, code varchar(10), openDate Date,endDate Date, amount numeric(10,2), rate float, fundISO char(3),clientId int,  FOREIGN KEY (clientId) REFERENCES client (clientid));
 
      CREATE SEQUENCE if not exists reqseq START 1000;
-     create table if not exists request(id serial,typecode char(10), message varchar(100),code varchar(10) ,opendate Date  default CURRENT_DATE, duedate Date,status varchar(10) default 'введено', dealid int, FOREIGN KEY (dealid) REFERENCES deal (dealid)) ;
+     create table if not exists request(id serial,typecode char(30), message varchar(100),code varchar(10) ,opendate Date  default CURRENT_DATE, duedate Date,status varchar(30) default 'введено', dealid int, FOREIGN KEY (dealid) REFERENCES deal (dealid)) ;
 
 create or replace function request_trigger ()
 returns trigger language plpgsql as $$

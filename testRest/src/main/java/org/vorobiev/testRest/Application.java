@@ -27,7 +27,7 @@ public class Application {
 
 
         return args -> {
-            if (repoRequest.count()<10000){
+            if (repoRequest.count()<10){
 
 
            /* Stream.of("1st test message  ", "2nd test message", "3rd test message").forEach(text -> {
@@ -40,7 +40,7 @@ public class Application {
 
 
 
-                while(i<10000){
+                while(i<10){
 
 
                     Request req = new Request("request N "+Integer.toString(i));
